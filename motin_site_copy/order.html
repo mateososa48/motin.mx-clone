@@ -1,0 +1,1284 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ordenar Pickup — Motín</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Abel&display=swap" rel="stylesheet">
+
+  <!-- Typekit (motor, acier-bat-solid) -->
+  <script src="./motin_index_files/SI7h6H1OASgV5IIeQfztsqrursyP1GHcU7jcr6SFPGMfezj2fFHN4UJLFRbh52jhWDmK5Q4yF2bkFQbUFhZRw2iqFDwXjR6XZg7gMkG0jAFu-WsoShFGZAsude80ZkoRdhXCHKoyjamTiY8Djhy8ZYmC-Ao1Oco8if37OcBDOcu8OfG0da4KOAB3Sc8RdasDOAuq5AG0SaBujW48Sagyjh90jhNlOfG0SaBujW48SagyjhmDjhy8ZYmC-Ao1.js" async></script>
+
+  <!-- Site base styles (Header, nav) -->
+  <link rel="stylesheet" href="./motin_index_files/site.css">
+
+  <style>
+    /* ───────── RESET & BASE ───────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Abel', Arial, sans-serif;
+      font-size: 18px;
+      background: #fafafa;
+      color: #111;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ───────── HEADER (matches existing site) ───────── */
+    .Header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: #fafafa;
+      border-bottom: 1px solid #e8e8e8;
+    }
+    .Header-inner--top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      height: 72px;
+    }
+    .Header-branding { display: flex; align-items: center; }
+    .Header-branding-logo { height: 40px; width: auto; display: block; }
+    .Header-nav-inner { display: flex; gap: 28px; }
+    .Header-nav-item {
+      font-family: 'Abel', Arial, sans-serif;
+      font-size: 13px;
+      letter-spacing: 0.1em;
+      color: #111;
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: opacity 0.15s;
+    }
+    .Header-nav-item:hover { opacity: 0.5; }
+    .Header-nav-item--active { border-bottom: 1px solid #111; }
+
+    /* ───────── HERO BANNER ───────── */
+    .hero {
+      background: #fff;
+      border-bottom: 1px solid #e8e8e8;
+      padding: 40px 24px 36px;
+      text-align: center;
+    }
+    .hero-label {
+      font-family: 'motor', 'Abel', sans-serif;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #777;
+      margin-bottom: 10px;
+    }
+    .hero-title {
+      font-family: 'motor', 'Abel', sans-serif;
+      font-size: clamp(32px, 5vw, 52px);
+      letter-spacing: -0.02em;
+      line-height: 1;
+      color: #111;
+      margin-bottom: 14px;
+    }
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px 24px;
+      font-size: 14px;
+      color: #555;
+      letter-spacing: 0.04em;
+    }
+    .hero-meta-pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .hero-meta-pill svg { flex-shrink: 0; opacity: 0.6; }
+
+    /* ───────── CATEGORY NAV BAR ───────── */
+    .cat-nav-wrapper {
+      position: sticky;
+      top: 72px;
+      z-index: 90;
+      background: #fff;
+      border-bottom: 1px solid #e8e8e8;
+    }
+    .cat-nav {
+      display: flex;
+      gap: 0;
+      overflow-x: auto;
+      padding: 0 24px;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    .cat-nav::-webkit-scrollbar { display: none; }
+    .cat-nav-item {
+      flex-shrink: 0;
+      font-family: 'Abel', sans-serif;
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #777;
+      text-decoration: none;
+      padding: 16px 18px;
+      border-bottom: 2px solid transparent;
+      transition: color 0.15s, border-color 0.15s;
+      cursor: pointer;
+      background: none;
+      border-left: none;
+      border-right: none;
+      border-top: none;
+    }
+    .cat-nav-item:hover { color: #111; }
+    .cat-nav-item.active {
+      color: #111;
+      border-bottom-color: #111;
+    }
+
+    /* ───────── LAYOUT ───────── */
+    .page-body {
+      display: flex;
+      gap: 0;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 0 120px;
+    }
+    .menu-col {
+      flex: 1 1 0;
+      min-width: 0;
+      padding: 0 24px;
+    }
+    .cart-col {
+      width: 340px;
+      flex-shrink: 0;
+      padding: 32px 24px 0 0;
+    }
+
+    /* ───────── MENU SECTION ───────── */
+    .menu-section { padding: 40px 0 0; }
+    .menu-section-title {
+      font-family: 'motor', 'Abel', sans-serif;
+      font-size: 22px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #111;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #e8e8e8;
+      margin-bottom: 24px;
+    }
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1px;
+      background: #e8e8e8;
+      border: 1px solid #e8e8e8;
+    }
+
+    /* ───────── ITEM CARD ───────── */
+    .item-card {
+      display: flex;
+      flex-direction: column;
+      background: #fff;
+      cursor: pointer;
+      transition: background 0.15s;
+      position: relative;
+    }
+    .item-card:hover { background: #f8f8f8; }
+    .item-card:hover .item-add-btn { opacity: 1; transform: scale(1); }
+    .item-img-wrap {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      overflow: hidden;
+      background: #f0ece8;
+    }
+    .item-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.3s ease;
+    }
+    .item-card:hover .item-img-wrap img { transform: scale(1.03); }
+    .item-img-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      text-align: center;
+      font-family: 'Abel', sans-serif;
+      font-size: 13px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #aaa;
+    }
+    .item-body { padding: 16px 16px 20px; flex: 1; display: flex; flex-direction: column; gap: 6px; }
+    .item-name {
+      font-family: 'motor', 'Abel', sans-serif;
+      font-size: 15px;
+      letter-spacing: 0.04em;
+      color: #111;
+      line-height: 1.3;
+    }
+    .item-desc {
+      font-size: 13px;
+      color: #777;
+      line-height: 1.5;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      flex: 1;
+    }
+    .item-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 12px;
+    }
+    .item-price {
+      font-family: 'Abel', sans-serif;
+      font-size: 15px;
+      color: #111;
+      letter-spacing: 0.02em;
+    }
+    .item-add-btn {
+      width: 30px;
+      height: 30px;
+      background: #111;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      font-size: 18px;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transform: scale(0.8);
+      transition: opacity 0.15s, transform 0.15s, background 0.15s;
+      flex-shrink: 0;
+    }
+    .item-add-btn:hover { background: #333; }
+    .item-popular-badge {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: #111;
+      color: #fff;
+      font-family: 'Abel', sans-serif;
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      pointer-events: none;
+    }
+
+    /* ───────── CART PANEL ───────── */
+    .cart-panel {
+      position: sticky;
+      top: calc(72px + 49px + 32px);
+      background: #fff;
+      border: 1px solid #e8e8e8;
+      max-height: calc(100vh - 72px - 49px - 64px);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .cart-header {
+      padding: 20px 20px 16px;
+      border-bottom: 1px solid #e8e8e8;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .cart-title {
+      font-family: 'motor', 'Abel', sans-serif;
+      font-size: 14px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #111;
+    }
+    .cart-count-badge {
+      background: #111;
+      color: #fff;
+      font-family: 'Abel', sans-serif;
+      font-size: 11px;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+    }
+    .cart-empty {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 24px;
+      text-align: center;
+      gap: 12px;
+    }
+    .cart-empty-icon { font-size: 32px; opacity: 0.3; }
+    .cart-empty-text { font-size: 14px; color: #999; line-height: 1.5; }
+    .cart-items { flex: 1; overflow-y: auto; }
+    .cart-item {
+      padding: 14px 20px;
+      border-bottom: 1px solid #f0f0f0;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+    .cart-item-info { flex: 1; min-width: 0; }
+    .cart-item-name {
+      font-family: 'Abel', sans-serif;
+      font-size: 14px;
+      color: #111;
+      line-height: 1.3;
+      margin-bottom: 3px;
+    }
+    .cart-item-mods {
+      font-size: 12px;
+      color: #999;
+      line-height: 1.4;
+    }
+    .cart-item-price {
+      font-family: 'Abel', sans-serif;
+      font-size: 14px;
+      color: #111;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .cart-qty {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .cart-qty-btn {
+      width: 22px;
+      height: 22px;
+      background: none;
+      border: 1px solid #ddd;
+      cursor: pointer;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #111;
+      transition: border-color 0.1s, background 0.1s;
+    }
+    .cart-qty-btn:hover { border-color: #111; background: #f5f5f5; }
+    .cart-qty-num { font-size: 14px; min-width: 16px; text-align: center; }
+    .cart-footer {
+      padding: 16px 20px 20px;
+      border-top: 1px solid #e8e8e8;
+    }
+    .cart-subtotal {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    .cart-subtotal-label { font-size: 13px; color: #777; letter-spacing: 0.04em; text-transform: uppercase; }
+    .cart-subtotal-value { font-family: 'Abel', sans-serif; font-size: 18px; color: #111; font-weight: 400; }
+    .btn-order {
+      display: block;
+      width: 100%;
+      background: #111;
+      color: #fff;
+      font-family: 'Abel', sans-serif;
+      font-size: 13px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      border: none;
+      padding: 16px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .btn-order:hover:not(:disabled) { background: #333; }
+    .btn-order:disabled { background: #bbb; cursor: default; }
+
+    /* ───────── MOBILE FLOATING CART ───────── */
+    .mobile-cart-btn {
+      display: none;
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 200;
+      background: #111;
+      color: #fff;
+      font-family: 'Abel', sans-serif;
+      font-size: 13px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      border: none;
+      padding: 16px 28px;
+      cursor: pointer;
+      white-space: nowrap;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.25);
+      transition: background 0.15s;
+    }
+    .mobile-cart-btn:hover { background: #333; }
+
+    /* ───────── MODAL BACKDROP ───────── */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      z-index: 300;
+      align-items: flex-end;
+      justify-content: center;
+    }
+    .modal-backdrop.open { display: flex; animation: fadeIn 0.2s ease; }
+
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes slideUp { from { transform: translateY(40px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+    /* ───────── ITEM DETAIL MODAL ───────── */
+    .item-modal {
+      background: #fff;
+      width: 100%;
+      max-width: 560px;
+      max-height: 90vh;
+      overflow-y: auto;
+      animation: slideUp 0.25s ease;
+      position: relative;
+      margin: auto;
+    }
+    .item-modal-img {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      display: block;
+      background: #f0ece8;
+    }
+    .item-modal-img-placeholder {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: #f0ece8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      color: #bbb;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .item-modal-close {
+      position: sticky;
+      top: 0;
+      float: right;
+      margin: 12px 12px -44px 0;
+      width: 36px;
+      height: 36px;
+      background: rgba(255,255,255,0.92);
+      border: 1px solid #e0e0e0;
+      cursor: pointer;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      color: #111;
+      transition: background 0.1s;
+    }
+    .item-modal-close:hover { background: #f5f5f5; }
+    .item-modal-body { padding: 28px 28px 0; }
+    .item-modal-name {
+      font-family: 'motor', 'Abel', sans-serif;
+      font-size: 24px;
+      letter-spacing: 0.02em;
+      color: #111;
+      margin-bottom: 8px;
+    }
+    .item-modal-desc { font-size: 15px; color: #777; line-height: 1.6; margin-bottom: 20px; }
+    .item-modal-base-price { font-size: 17px; color: #111; margin-bottom: 24px; }
+
+    /* ───────── MODIFIER GROUPS ───────── */
+    .mod-group { margin-bottom: 24px; }
+    .mod-group-header {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #e8e8e8;
+      margin-bottom: 14px;
+    }
+    .mod-group-name {
+      font-family: 'Abel', sans-serif;
+      font-size: 14px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #111;
+    }
+    .mod-group-tag {
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #fff;
+      background: #111;
+      padding: 2px 7px;
+    }
+    .mod-group-tag.optional { background: #e8e8e8; color: #777; }
+    .mod-group-hint { font-size: 12px; color: #999; margin-left: auto; }
+    .mod-option {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 0;
+      cursor: pointer;
+      border-bottom: 1px solid #f5f5f5;
+    }
+    .mod-option:last-child { border-bottom: none; }
+    .mod-option input[type="radio"],
+    .mod-option input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: #111;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .mod-option-label { flex: 1; font-size: 15px; color: #333; cursor: pointer; }
+    .mod-option-price { font-size: 14px; color: #777; white-space: nowrap; }
+
+    /* ───────── MODAL FOOTER (qty + add) ───────── */
+    .item-modal-footer {
+      position: sticky;
+      bottom: 0;
+      background: #fff;
+      border-top: 1px solid #e8e8e8;
+      padding: 16px 28px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .qty-stepper {
+      display: flex;
+      align-items: center;
+      border: 1px solid #e0e0e0;
+    }
+    .qty-btn {
+      width: 36px;
+      height: 44px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #111;
+      transition: background 0.1s;
+    }
+    .qty-btn:hover { background: #f5f5f5; }
+    .qty-num { min-width: 32px; text-align: center; font-size: 16px; }
+    .btn-add-to-cart {
+      flex: 1;
+      background: #111;
+      color: #fff;
+      font-family: 'Abel', sans-serif;
+      font-size: 13px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      border: none;
+      padding: 14px 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: background 0.15s;
+    }
+    .btn-add-to-cart:hover:not(:disabled) { background: #333; }
+    .btn-add-to-cart:disabled { background: #bbb; cursor: default; }
+    .btn-add-label { letter-spacing: 0.12em; }
+    .btn-add-price { font-size: 14px; }
+
+    /* ───────── MOBILE CART DRAWER ───────── */
+    .cart-drawer-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 400;
+      align-items: flex-end;
+    }
+    .cart-drawer-backdrop.open { display: flex; animation: fadeIn 0.2s ease; }
+    .cart-drawer {
+      background: #fff;
+      width: 100%;
+      max-height: 80vh;
+      display: flex;
+      flex-direction: column;
+      animation: slideUp 0.25s ease;
+    }
+    .cart-drawer-handle {
+      width: 36px;
+      height: 4px;
+      background: #ddd;
+      border-radius: 2px;
+      margin: 12px auto 0;
+    }
+
+    /* ───────── CONFIRMATION MODAL ───────── */
+    .confirm-modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.65);
+      z-index: 500;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .confirm-modal-backdrop.open { display: flex; animation: fadeIn 0.2s ease; }
+    .confirm-modal {
+      background: #fff;
+      max-width: 440px;
+      width: 100%;
+      padding: 48px 40px;
+      text-align: center;
+      animation: slideUp 0.25s ease;
+    }
+    .confirm-icon { font-size: 48px; margin-bottom: 20px; }
+    .confirm-title {
+      font-family: 'motor', 'Abel', sans-serif;
+      font-size: 26px;
+      letter-spacing: 0.03em;
+      color: #111;
+      margin-bottom: 12px;
+    }
+    .confirm-subtitle { font-size: 16px; color: #777; line-height: 1.6; margin-bottom: 32px; }
+    .confirm-detail {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-top: 1px solid #e8e8e8;
+      font-size: 14px;
+    }
+    .confirm-detail-label { color: #999; letter-spacing: 0.04em; text-transform: uppercase; font-size: 12px; }
+    .confirm-detail-value { color: #111; }
+    .btn-confirm-close {
+      display: block;
+      width: 100%;
+      background: #111;
+      color: #fff;
+      font-family: 'Abel', sans-serif;
+      font-size: 13px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      border: none;
+      padding: 16px;
+      cursor: pointer;
+      margin-top: 28px;
+      transition: background 0.15s;
+    }
+    .btn-confirm-close:hover { background: #333; }
+
+    /* ───────── RESPONSIVE ───────── */
+    @media (max-width: 768px) {
+      .cart-col { display: none; }
+      .page-body { padding-bottom: 80px; }
+      .menu-grid { grid-template-columns: 1fr; }
+      .mobile-cart-btn { display: block; }
+      .item-modal { max-height: 95vh; }
+      .item-modal-body { padding: 20px 20px 0; }
+      .item-modal-footer { padding: 14px 20px; }
+      .confirm-modal { padding: 36px 24px; }
+      .hero { padding: 28px 20px 24px; }
+    }
+
+    @media (max-width: 480px) {
+      .Header-inner--top { padding: 0 16px; }
+      .menu-col { padding: 0 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════
+       HEADER
+  ═══════════════════════════════════════ -->
+  <header class="Header Header--top">
+    <div class="Header-inner Header-inner--top">
+      <div>
+        <nav class="Header-nav Header-nav--primary">
+          <div class="Header-nav-inner">
+            <a href="./nosotros.html" class="Header-nav-item">NOSOTROS</a>
+            <a href="./menu.html" class="Header-nav-item">MENU</a>
+          </div>
+        </nav>
+      </div>
+      <div>
+        <a href="./index.html" class="Header-branding">
+          <img src="./motin_index_files/LOGO_MOTIN.png" alt="Motín" class="Header-branding-logo">
+        </a>
+      </div>
+      <div>
+        <nav class="Header-nav Header-nav--secondary">
+          <div class="Header-nav-inner">
+            <a href="./takeout.html" class="Header-nav-item Header-nav-item--active">TAKE OUT</a>
+            <a href="./delivery.html" class="Header-nav-item">DELIVERY</a>
+          </div>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- ═══════════════════════════════════════
+       HERO
+  ═══════════════════════════════════════ -->
+  <div class="hero">
+    <p class="hero-label">Pickup en tienda</p>
+    <h1 class="hero-title">MOTÍN</h1>
+    <div class="hero-meta">
+      <span class="hero-meta-pill">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        Tabasco #311, Roma Norte · CDMX
+      </span>
+      <span class="hero-meta-pill">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        Listo en ~15 min
+      </span>
+      <span class="hero-meta-pill">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Mar – Dom, 8:30 – 17:30
+      </span>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       CATEGORY NAV
+  ═══════════════════════════════════════ -->
+  <div class="cat-nav-wrapper">
+    <nav class="cat-nav" id="catNav"></nav>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       PAGE BODY
+  ═══════════════════════════════════════ -->
+  <div class="page-body">
+
+    <!-- Menu column -->
+    <div class="menu-col" id="menuCol"></div>
+
+    <!-- Cart column (desktop) -->
+    <div class="cart-col">
+      <div class="cart-panel" id="cartPanel">
+        <div class="cart-header">
+          <span class="cart-title">Tu orden</span>
+          <span class="cart-count-badge" id="cartBadgeDesktop">0</span>
+        </div>
+        <div class="cart-empty" id="cartEmpty">
+          <div class="cart-empty-icon">🛍</div>
+          <p class="cart-empty-text">Agrega platillos<br>para comenzar</p>
+        </div>
+        <div class="cart-items" id="cartItemsDesktop" style="display:none"></div>
+        <div class="cart-footer" id="cartFooter" style="display:none">
+          <div class="cart-subtotal">
+            <span class="cart-subtotal-label">Total</span>
+            <span class="cart-subtotal-value" id="cartTotalDesktop">$0</span>
+          </div>
+          <button class="btn-order" id="btnOrderDesktop" onclick="placeOrder()">
+            Ordenar Pickup
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Mobile floating cart button -->
+  <button class="mobile-cart-btn" id="mobileCartBtn" onclick="openCartDrawer()" style="display:none">
+    Ver orden · <span id="mobileCartTotal">$0</span>
+  </button>
+
+  <!-- ═══════════════════════════════════════
+       ITEM DETAIL MODAL
+  ═══════════════════════════════════════ -->
+  <div class="modal-backdrop" id="itemModalBackdrop" onclick="closeItemModal(event)">
+    <div class="item-modal" id="itemModal">
+      <button class="item-modal-close" onclick="closeItemModalDirect()">×</button>
+      <div id="itemModalImgWrap"></div>
+      <div class="item-modal-body" id="itemModalBody"></div>
+      <div class="item-modal-footer">
+        <div class="qty-stepper">
+          <button class="qty-btn" onclick="changeModalQty(-1)">−</button>
+          <span class="qty-num" id="modalQtyNum">1</span>
+          <button class="qty-btn" onclick="changeModalQty(1)">+</button>
+        </div>
+        <button class="btn-add-to-cart" id="btnAddToCart" onclick="addToCartFromModal()">
+          <span class="btn-add-label">Agregar</span>
+          <span class="btn-add-price" id="btnAddPrice">$0</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       MOBILE CART DRAWER
+  ═══════════════════════════════════════ -->
+  <div class="cart-drawer-backdrop" id="cartDrawerBackdrop" onclick="closeCartDrawer(event)">
+    <div class="cart-drawer">
+      <div class="cart-drawer-handle"></div>
+      <div class="cart-header">
+        <span class="cart-title">Tu orden</span>
+        <button onclick="closeCartDrawerDirect()" style="background:none;border:none;cursor:pointer;font-size:20px;color:#111">×</button>
+      </div>
+      <div class="cart-items" id="cartItemsMobile" style="flex:1;overflow-y:auto"></div>
+      <div class="cart-footer">
+        <div class="cart-subtotal">
+          <span class="cart-subtotal-label">Total</span>
+          <span class="cart-subtotal-value" id="cartTotalMobile">$0</span>
+        </div>
+        <button class="btn-order" id="btnOrderMobile" onclick="placeOrder()" disabled>
+          Ordenar Pickup
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       CONFIRMATION MODAL
+  ═══════════════════════════════════════ -->
+  <div class="confirm-modal-backdrop" id="confirmModalBackdrop">
+    <div class="confirm-modal">
+      <div class="confirm-icon">✓</div>
+      <h2 class="confirm-title">¡Pedido recibido!</h2>
+      <p class="confirm-subtitle">Tu orden está siendo preparada.<br>Pasa a recogerla en aproximadamente:</p>
+      <div style="font-family:'motor','Abel',sans-serif;font-size:48px;letter-spacing:-0.02em;margin:8px 0 24px">~15 min</div>
+      <div class="confirm-detail">
+        <span class="confirm-detail-label">Ubicación</span>
+        <span class="confirm-detail-value">Tabasco #311, Roma Norte</span>
+      </div>
+      <div class="confirm-detail">
+        <span class="confirm-detail-label">Total</span>
+        <span class="confirm-detail-value" id="confirmTotal">$0</span>
+      </div>
+      <button class="btn-confirm-close" onclick="closeConfirm()">Entendido</button>
+    </div>
+  </div>
+
+
+  <script>
+  // ═══════════════════════════════════════════
+  // MENU DATA
+  // ═══════════════════════════════════════════
+  const MENU = {"store_name":"Motin","store_id":"d8e472d1-ba15-403c-a918-11a325a366e4","source":"uber_eats","categories":[{"name":"Desayunos","items":[{"item_id":"e9f98afd-12bb-58c6-aa2e-bc7a9c080209","title":"Desayuno Completo","description":"2 pieza de Hot Cakes mini, tocino (20gr), dos huevos revueltos o estrellados, guarnición de papas o frutos rojos","category":"Desayunos","price":260,"currency":"MXN","image_urls":["https://tb-static.uber.com/prod/image-proc/processed_images/2f8bbddad4635c60c1aebed7d12d102e/5143f1e218c67c20fe5a4cd33d90b07b.jpeg"],"is_featured":true,"is_popular":true,"is_unavailable":false,"modifier_groups":[{"group_name":"Huevo delivery","required":true,"min_selection":1,"max_selection":2,"options":[{"name":"Estrellado","price":0,"is_default":false},{"name":"Estrellado Bañado","price":0,"is_default":false},{"name":"Estrellado bien cocido","price":0,"is_default":false},{"name":"Revuelto","price":0,"is_default":false},{"name":"Sin huevo","price":0,"is_default":false},{"name":"Huevo extra","price":32,"is_default":false}]},{"group_name":"Guarnición","required":true,"min_selection":1,"max_selection":2,"options":[{"name":"Frutos Rojos","price":0,"is_default":false},{"name":"Papas","price":0,"is_default":false},{"name":"Ensalada","price":0,"is_default":false}]}]},{"item_id":"a3e6f1ae-a87d-5417-8a78-62c6a63401e1","title":"Huevos Cazuela","description":"2 huevos estrellados, horneados con salsa de jitomate casera, espinaca, queso mozarella y parmesano","category":"Desayunos","price":225,"currency":"MXN","image_urls":["https://tb-static.uber.com/prod/image-proc/processed_images/124d8929da28b12314486c7f729a0c2b/5143f1e218c67c20fe5a4cd33d90b07b.jpeg"],"is_featured":true,"is_popular":false,"is_unavailable":false,"modifier_groups":[{"group_name":"Huevo delivery","required":true,"min_selection":1,"max_selection":2,"options":[{"name":"Estrellado","price":0,"is_default":false},{"name":"Estrellado Bañado","price":0,"is_default":false},{"name":"Estrellado bien cocido","price":0,"is_default":false},{"name":"Revuelto","price":0,"is_default":false},{"name":"Sin huevo","price":0,"is_default":false},{"name":"Huevo extra","price":32,"is_default":false}]}]},{"item_id":"ab1b47b1-0b13-5ad6-b75c-156f1fb88be4","title":"Bowl De Quinoa","description":"Quinoa a la mexicana (150gr) (jitomate, serrano, cebolla y perejil) con 1 huevo revuelto, estrellado o pochado y aguacate","category":"Desayunos","price":220,"currency":"MXN","image_urls":["https://tb-static.uber.com/prod/image-proc/processed_images/fb30afc620f172c0b4e6a8bec7cff177/5143f1e218c67c20fe5a4cd33d90b07b.jpeg"],"is_featured":false,"is_popular":false,"is_unavailable":false,"modifier_groups":[{"group_name":"Huevo delivery","required":true,"min_selection":1,"max_selection":2,"options":[{"name":"Estrellado","price":0,"is_default":false},{"name":"Estrellado Bañado","price":0,"is_default":false},{"name":"Estrellado bien cocido","price":0,"is_default":false},{"name":"Revuelto","price":0,"is_default":false},{"name":"Sin huevo","price":0,"is_default":false},{"name":"Huevo extra","price":32,"is_default":false}]}]},{"item_id":"c9291b8b-bee2-5f28-89a7-18a0d7cb65d4","title":"Omelette Mediterráneo","description":"Omelette de dos huevos (110gr) con jocoque, bañado con salsa verde, y guarnición de ensalada griega (128gr)","category":"Desayunos","price":220,"currency":"MXN","image_urls":["https://tb-static.uber.com/prod/image-proc/processed_images/e356715b123c4d9a07d6947689c2569b/5143f1e218c67c20fe5a4cd33d90b07b.jpeg"],"is_featured":false,"is_popular":false,"is_unavailable":false,"modifier_groups":[]},{"item_id":"913560b1-09e2-56d0-9267-0983c48a8686","title":"Huevos Parmesano","description":"2 huevos revueltos (110gr) con queso parmesano, arúgula fresca y jitomate cherry, pan campesino y ensalada verde","category":"Desayunos","price":225,"currency":"MXN","image_urls":["https://tb-static.uber.com/prod/image-proc/processed_images/bf01339c4f08bc10fec9a1a79027b434/5143f1e218c67c20fe5a4cd33d90b07b.jpeg"],"is_featured":false,"is_popular":false,"is_unavailable":false,"modifier_groups":[]}]},{"name":"Cafés","items":[{"item_id":"760a0d69-3f54-5ca5-96c0-fc117d08df16","title":"Latte","description":"Latte","category":"Cafés","price":80,"currency":"MXN","image_urls":["https://tb-static.uber.com/prod/image-proc/processed_images/7c70c9ad6d6b734148d0a5278ad7411b/5143f1e218c67c20fe5a4cd33d90b07b.jpeg"],"is_featured":true,"is_popular":false,"is_unavailable":false,"modifier_groups":[{"group_name":"Cambio de leche","required":false,"min_selection":0,"max_selection":1,"options":[{"name":"Entera","price":0,"is_default":false},{"name":"Deslactosada","price":0,"is_default":false},{"name":"Avena","price":15,"is_default":false},{"name":"Almendra","price":15,"is_default":false},{"name":"Coco","price":15,"is_default":false}]},{"group_name":"Temperatura","required":true,"min_selection":1,"max_selection":1,"options":[{"name":"Caliente","price":0,"is_default":false},{"name":"Frío","price":0,"is_default":false}]},{"group_name":"Shot extra","required":false,"min_selection":0,"max_selection":2,"options":[{"name":"Shot Café","price":8,"is_default":false}]}]},{"item_id":"237cfd0e-4237-578e-b912-42e3af22ef6a","title":"Café Americano","description":"Café Americano","category":"Cafés","price":70,"currency":"MXN","image_urls":["https://tb-static.uber.com/prod/image-proc/processed_images/2722659c966f833889dd1d1c391f6454/5143f1e218c67c20fe5a4cd33d90b07b.jpeg"],"is_featured":false,"is_popular":false,"is_unavailable":false,"modifier_groups":[{"group_name":"Cambio de leche","required":false,"min_selection":0,"max_selection":1,"options":[{"name":"Entera","price":0,"is_default":false},{"name":"Deslactosada","price":0,"is_default":false},{"name":"Avena","price":15,"is_default":false},{"name":"Almendra","price":15,"is_default":false},{"name":"Coco","price":15,"is_default":false}]}]},{"item_id":"bfe96adb-63bb-5e5f-9aba-21a720e0bb7d","title":"Vaso De Leche","description":"Vaso De Leche","category":"Cafés","price":30,"currency":"MXN","image_urls":[],"is_featured":false,"is_popular":false,"is_unavailable":false,"modifier_groups":[]},{"item_id":"8ea8c891-faec-416b-a386-8e597acf1557","title":"Capuchino","description":"Capuchino","category":"Cafés","price":85,"currency":"MXN","image_urls":["https://tb-static.uber.com/prod/image-proc/processed_images/4d810fa1aeab6ad6be85b2c5a8b761e0/5143f1e218c67c20fe5a4cd33d90b07b.jpeg"],"is_featured":false,"is_popular":false,"is_unavailable":false,"modifier_groups":[{"group_name":"Cambio de leche","required":false,"min_selection":0,"max_selection":1,"options":[{"name":"Entera","price":0,"is_default":false},{"name":"Deslactosada","price":0,"is_default":false},{"name":"Avena","price":15,"is_default":false},{"name":"Almendra","price":15,"is_default":false},{"name":"Coco","price":15,"is_default":false}]},{"group_name":"Shot extra","required":false,"min_selection":0,"max_selection":2,"options":[{"name":"Shot Café","price":8,"is_default":false}]}]},{"item_id":"74232674-1fec-598d-af2a-43fc8a7d4bb6","title":"Flat White","description":"Flat White","category":"Cafés","price":80,"currency":"MXN","image_urls":["https://tb-static.uber.com/prod/image-proc/processed_images/3eb22e286e2032a1ed8bec65969aee6e/5143f1e218c67c20fe5a4cd33d90b07b.jpeg"],"is_featured":false,"is_popular":false,"is_unavailable":false,"modifier_groups":[{"group_name":"Cambio de leche","required":false,"min_selection":0,"max_selection":1,"options":[{"name":"Entera","price":0,"is_default":false},{"name":"Deslactosada","price":0,"is_default":false},{"name":"Avena","price":15,"is_default":false},{"name":"Almendra","price":15,"is_default":false},{"name":"Coco","price":15,"is_default":false}]}]},{"item_id":"adab381a-369b-5f5b-9976-590c51bbeaea","title":"Latte Vainilla","description":"Latte con jarabe vainilla","category":"Cafés","price":85,"currency":"MXN","image_urls":[],"is_featured":false,"is_popular":false,"is_unavailable":false,"modifier_groups":[{"group_name":"Cambio de leche","required":false,"min_selection":0,"max_selection":1,"options":[{"name":"Entera","price":0,"is_default":false},{"name":"Deslactosada","price":0,"is_default":false},{"name":"Avena","price":15,"is_default":false},{"name":"Almendra","price":15,"is_default":false},{"name":"Coco","price":15,"is_default":false}]},{"group_name":"Shot extra","required":false,"min_selection":0,"max_selection":2,"options":[{"name":"Shot Café","price":8,"is_default":false}]}]},{"item_id":"511a1d99-9e1b-5d75-bfcb-5a4f806c55b4","title":"Caramel Latte","description":"latte con caramelo","category":"Cafés","price":85,"currency":"MXN","image_urls":[],"is_featured":false,"is_popular":false,"is_unavailable":false,"modifier_groups":[{"group_name":"Cambio de leche","required":false,"min_selection":0,"max_selection":1,"options":[{"name":"Entera","price":0,"is_default":false},{"name":"Deslactosada","price":0,"is_default":false},{"name":"Avena","price":15,"is_default":false},{"name":"Almendra","price":15,"is_default":false},{"name":"Coco","price":15,"is_default":false}]},{"group_name":"Temperatura","required":true,"min_selection":1,"max_selection":1,"options":[{"name":"Caliente","price":0,"is_default":false},{"name":"Frío","price":0,"is_default":false}]}]},{"item_id":"f0f6b5f7-a225-5706-9029-87791166352d","title":"Espresso","description":"Espresso","category":"Cafés","price":50,"currency":"MXN","image_urls":["https://tb-static.uber.com/prod/image-proc/processed_images/3eb22e286e2032a1ed8bec65969aee6e/5143f1e218c67c20fe5a4cd33d90b07b.jpeg"],"is_featured":false,"is_popular":false,"is_unavailable":false,"modifier_groups":[]},{"item_id":"dacc93f4-764c-50ba-ad0c-5875e84d9cfc","title":"Espresso Doble","description":"Espresso Doble","category":"Cafés","price":60,"currency":"MXN","image_urls":["https://tb-static.uber.com/prod/image-proc/processed_images/3eb22e286e2032a1ed8bec65969aee6e/5143f1e218c67c20fe5a4cd33d90b07b.jpeg"],"is_featured":false,"is_popular":false,"is_unavailable":false,"modifier_groups":[]},{"item_id":"bf2987e7-13c4-49ac-ae6a-374998c4714e","title":"Cold Brew Latte","description":"Cold Brew Latte","category":"Cafés","price":90,"currency":"MXN","image_urls":["https://tb-static.uber.com/prod/image-proc/processed_images/05aa91cc2c65c0d1f9eed7af15b22fba/5143f1e218c67c20fe5a4cd33d90b07b.jpeg"],"is_featured":false,"is_popular":false,"is_unavailable":false,"modifier_groups":[{"group_name":"Cambio de leche","required":false,"min_selection":0,"max_selection":1,"options":[{"name":"Entera","price":0,"is_default":false},{"name":"Deslactosada","price":0,"is_default":false},{"name":"Avena","price":15,"is_default":false},{"name":"Almendra","price":15,"is_default":false},{"name":"Coco","price":15,"is_default":false}]}]},{"item_id":"0bfce607-5da4-509f-9d5f-01bf64e32cb1","title":"Moka","description":"Moka","category":"Cafés","price":90,"currency":"MXN","image_urls":["https://tb-static.uber.com/prod/image-proc/processed_images/4d810fa1aeab6ad6be85b2c5a8b761e0/5143f1e218c67c20fe5a4cd33d90b07b.jpeg"],"is_featured":false,"is_popular":false,"is_unavailable":false,"modifier_groups":[{"group_name":"Cambio de leche","required":false,"min_selection":0,"max_selection":1,"options":[{"name":"Entera","price":0,"is_default":false},{"name":"Deslactosada","price":0,"is_default":false},{"name":"Avena","price":15,"is_default":false},{"name":"Almendra","price":15,"is_default":false},{"name":"Coco","price":15,"is_default":false}]}]},{"item_id":"0979bab6-276b-5c6f-af1e-2fac2ad6a409","title":"Cold brew Americano","description":"Café frío con agua natural","category":"Cafés","price":85,"currency":"MXN","image_urls":["https://tb-static.uber.com/prod/image-proc/processed_images/5213c9399e6a15466e59f9056eaa558c/5143f1e218c67c20fe5a4cd33d90b07b.jpeg"],"is_featured":false,"is_popular":false,"is_unavailable":false,"modifier_groups":[]},{"item_id":"727fc3b5-1f45-45c0-92a9-e5c9fb88d847","title":"Cold Brew Tonic","description":"Cold Brew Tonic","category":"Cafés","price":90,"currency":"MXN","image_urls":[],"is_featured":false,"is_popular":false,"is_unavailable":false,"modifier_groups":[]}]},{"name":"Toasts","items":[{"item_id":"cd2b5cf5-a32a-5876-8700-0684f5631852","title":"Toast De Aguacate","description":"Pan campesino tostado con aguacate preparado, ensaladita de arúgula y espinaca, queso parmesano rallado y un huevo pochado.","category":"Toasts","price":240,"currency":"MXN","image_urls":["https://tb-static.uber.com/prod/image-proc/processed_images/91562e20512f85ef8f382d8b31f7eec0/5143f1e218c67c20fe5a4cd33d90b07b.jpeg"],"is_featured":true,"is_popular":false,"is_unavailable":false,"modifier_groups":[{"group_name":"Huevo delivery","required":true,"min_selection":1,"max_selection":2,"options":[{"name":"Estrellado","price":0,"is_default":false},{"name":"Estrellado Bañado","price":0,"is_default":false},{"name":"Estrellado bien cocido","price":0,"is_default":false},{"name":"Revuelto","price":0,"is_default":false},{"name":"Sin huevo","price":0,"is_default":false},{"name":"Huevo extra","price":32,"is_default":false}]}]},{"item_id":"4545fd02-c9d0-5fda-8243-fae7472685d4","title":"Toast De Salmón Curado","description":"Pan campesino tostado, tzatziki, salmón curado en betabel, pepino, alcaparras y aderezo de mostaza y miel","category":"Toasts","price":255,"currency":"MXN","image_urls":["https://tb-static.uber.com/prod/image-proc/processed_images/e108980b6d2e77f94b115dce4e67960b/5143f1e218c67c20fe5a4cd33d90b07b.jpeg"],"is_featured":false,"is_popular":false,"is_unavailable":false,"modifier_groups":[]}]},{"name":"Chilaquiles y Molletes","items":[{"item_id":"09028c36-0fe4-5493-878d-65d3b816a73e","title":"Chilaquiles Motin Delivery","description":"Chilaquiles cremosos Motin, servidos con mezcla de queso oaxaca y manchego, con frijoles refritos, agrega extra proteína","category":"Chilaquiles y Molletes","price":220,"currency":"MXN","image_urls":["https://tb-static.uber.com/prod/image-proc/processed_images/09abb02b681ce7f3ac0a76b12b113a4f/c67fc65e9b4e16a553eb7574fba090f1.jpeg"],"is_featured":true,"is_popular":true,"is_unavailable":false,"modifier_groups":[{"group_name":"Salsas Delivery","required":true,"min_selection":1,"max_selection":1,"options":[{"name":"Roja","price":0,"is_default":false},{"name":"Verde","price":0,"is_default":false},{"name":"Mixta","price":0,"is_default":false}]},{"group_name":"Agrega a tus chilaquiles","required":true,"min_selection":1,"max_selection":5,"options":[{"name":"Sin extra","price":0,"is_default":false},{"name":"Revuelto","price":32,"is_default":false},{"name":"Estrellado bien cocido","price":32,"is_default":false},{"name":"Estrellado Bañado","price":32,"is_default":false},{"name":"Estrellado","price":32,"is_default":false},{"name":"Extra Pollo","price":32,"is_default":false}]},{"group_name":"¿Tus chilaquiles preparados?","required":true,"min_selection":1,"max_selection":1,"options":[{"name":"Si por favor, con salsa","price":0,"is_default":false},{"name":"No gracias, salsa a parte","price":0,"is_default":false}]}]},{"item_id":"35ce8501-3785-4730-9ea6-7005d942ba99","title":"Molletes","description":"Baguette, queso oaxaca, manchego y cabra, acompañados de pico de gallo (58gr)","category":"Chilaquiles y Molletes","price":185,"currency":"MXN","image_urls":["https://tb-static.uber.com/prod/image-proc/processed_images/ad69c6955ab8422739fe64d7022c79c3/5143f1e218c67c20fe5a4cd33d90b07b.jpeg"],"is_featured":true,"is_popular":false,"is_unavailable":false,"modifier_groups":[{"group_name":"Extras molletes","required":true,"min_selection":1,"max_selection":3,"options":[{"name":"Agrega Tocino","price":40,"is_default":false},{"name":"Agrega Jamón de pavo","price":25,"is_default":false},{"name":"Extra queso","price":20,"is_default":false},{"name":"Sin extra","price":0,"is_default":false}]}]},{"item_id":"f56741b5-781b-5288-aeb6-a9bfecd905f8","title":"Enfrijoladas","description":"Tres tortillas bañadas con nuestra salsa de frijoles con un toque de chipotle y crema.Elige tu relleno favorito!","category":"Chilaquiles y Molletes","price":210,"currency":"MXN","image_urls":["https://tb-static.uber.com/prod/image-proc/processed_images/d74258b06e6eda57cc3ed4086419ec69/5143f1e218c67c20fe5a4cd33d90b07b.jpeg"],"is_featured":true,"is_popular":false,"is_unavailable":false,"modifier_groups":[{"group_name":"Enfrijoladas","required":true,"min_selection":1,"max_selection":1,"options":[{"name":"Queso","price":0,"is_default":false},{"name":"Pollo","price":0,"is_default":false},{"name":"Huevo revuelto","price":0,"is_default":false}]},{"group_name":"Extras Salados Delivery","required":false,"min_selection":0,"max_selection":5,"options":[{"name":"Agrega Milanesa Pollo","price":75,"is_default":false},{"name":"Agrega Pollo","price":32,"is_default":false},{"name":"Agrega 1 Huevo estrellado","price":32,"is_default":false},{"name":"Estrellado bien cocido","price":32,"is_default":false},{"name":"Estrellado Bañado","price":32,"is_default":false},{"name":"Aguacate","price":35,"is_default":false},{"name":"Agrega Chorizo","price":35,"is_default":false},{"name":"Agrega Tocino","price":65,"is_default":false},{"name":"Agrega 1 Huevo revuelto","price":32,"is_default":false},{"name":"Agrega Arrachera","price":65,"is_default":false}]}]},{"item_id":"f8e64222-e755-5a67-99a9-6441b8be25b9","title":"Mollaquiles","description":"Los tradicionales chilaquiles cremosos Motin servidos sobre 2 molletes, gratinados con queso y servidos con pico de gallo","category":"Chilaquiles y Molletes","price":240,"currency":"MXN","image_urls":["https://tb-static.uber.com/prod/image-proc/processed_images/217782f49493546f594cc68cbc125c0b/f47cec1eac1d3b43eccf2318d065819a.jpeg"],"is_featured":true,"is_popular":false,"is_unavailable":false,"modifier_groups":[{"group_name":"Salsa Chilaquiles","required":true,"min_selection":1,"max_selection":1,"options":[{"name":"Rojos","price":0,"is_default":false},{"name":"Verdes","price":0,"is_default":false},{"name":"Mixtos","price":0,"is_default":false}]},{"group_name":"Extras Salados Delivery","required":false,"min_selection":0,"max_selection":5,"options":[{"name":"Agrega Milanesa Pollo","price":75,"is_default":false},{"name":"Agrega Pollo","price":32,"is_default":false},{"name":"Agrega 1 Huevo estrellado","price":32,"is_default":false},{"name":"Estrellado bien cocido","price":32,"is_default":false},{"name":"Estrellado Bañado","price":32,"is_default":false},{"name":"Aguacate","price":35,"is_default":false},{"name":"Agrega Chorizo","price":35,"is_default":false},{"name":"Agrega Tocino","price":65,"is_default":false},{"name":"Agrega 1 Huevo revuelto","price":32,"is_default":false},{"name":"Agrega Arrachera","price":65,"is_default":false}]}]},{"item_id":"f063f1c2-6d6a-5886-a7a9-87387bbc3e78","title":"Chilaquiles Rancheros","description":"Salsa picante asada de tomate verde y jitomate con chile morita y serrano. Servidos con arrachera, queso fresco y crema","category":"Chilaquiles y Molletes","price":245,"currency":"MXN","image_urls":[],"is_featured":false,"is_popular":false,"is_unavailable":false,"modifier_groups":[{"group_name":"Rancheros","required":false,"min_selection":0,"max_selection":1,"options":[{"name":"Arrachera","price":0,"is_default":false},{"name":"Estrellado","price":0,"is_default":false},{"name":"Estrellado bien cocido","price":0,"is_default":false},{"name":"Pollo","price":0,"is_default":false},{"name":"Revuelto","price":0,"is_default":false},{"name":"Estrellado bañado","price":0,"is_default":false}]},{"group_name":"Extras Salados Delivery","required":false,"min_selection":0,"max_selection":5,"options":[{"name":"Agrega Milanesa Pollo","price":75,"is_default":false},{"name":"Agrega Pollo","price":32,"is_default":false},{"name":"Agrega 1 Huevo estrellado","price":32,"is_default":false},{"name":"Estrellado bien cocido","price":32,"is_default":false},{"name":"Estrellado Bañado","price":32,"is_default":false},{"name":"Aguacate","price":35,"is_default":false},{"name":"Agrega Chorizo","price":35,"is_default":false},{"name":"Agrega Tocino","price":65,"is_default":false},{"name":"Agrega 1 Huevo revuelto","price":32,"is_default":false},{"name":"Agrega Arrachera","price":65,"is_default":false}]}]},{"item_id":"3e5c01a8-4eff-5cd3-94bc-26a9b6870f4c","title":"Enfrijoladas Veracruzanas","description":"3 tortillas rellenas de huevo revuelto a la mexicana con salsa de frijol, chorizo doradito con crema, queso y aguacate","category":"Chilaquiles y Molletes","price":240,"currency":"MXN","image_urls":[],"is_featured":false,"is_popular":false,"is_unavailable":false,"modifier_groups":[{"group_name":"Extras Salados Delivery","required":false,"min_selection":0,"max_selection":5,"options":[{"name":"Agrega Milanesa Pollo","price":75,"is_default":false},{"name":"Agrega Pollo","price":32,"is_default":false},{"name":"Agrega 1 Huevo estrellado","price":32,"is_default":false},{"name":"Estrellado bien cocido","price":32,"is_default":false},{"name":"Estrellado Bañado","price":32,"is_default":false},{"name":"Aguacate","price":35,"is_default":false},{"name":"Agrega Chorizo","price":35,"is_default":false},{"name":"Agrega Tocino","price":65,"is_default":false},{"name":"Agrega 1 Huevo revuelto","price":32,"is_default":false},{"name":"Agrega Arrachera","price":65,"is_default":false}]}]},{"item_id":"935cf258-e2c0-5a01-abf7-8290466e827f","title":"Torta Chilaquiles","description":"Chilaquiles cremosos Motin, servidos dentro de una telera con frijoles, crema, queso, cebolla y milanesa de pollo","category":"Chilaquiles y Molletes","price":140,"currency":"MXN","image_urls":[],"is_featured":false,"is_popular":false,"is_unavailable":false,"modifier_groups":[{"group_name":"Salsa Chilaquiles","required":true,"min_selection":1,"max_selection":1,"options":[{"name":"Rojos","price":0,"is_default":false},{"name":"Verdes","price":0,"is_default":false},{"name":"Mixtos","price":0,"is_default":false}]}]}]},{"name":"Lo Dulce","items":[{"item_id":"23719696-f4d1-51e1-9039-7f6c9e6ce8e7","title":"Pan Francés Delivery","description":"Pan Francés","category":"Lo Dulce","price":270,"currency":"MXN","image_urls":["https://tb-static.uber.com/prod/image-proc/processed_images/cb949dad231da6dd24ba534f40c891cc/5143f1e218c67c20fe5a4cd33d90b07b.jpeg"],"is_featured":true,"is_popular":true,"is_unavailable":false,"modifier_groups":[{"group_name":"Extras Lo Dulce Delivery","required":false,"min_selection":0,"max_selection":3,"options":[{"name":"Extra maple","price":25,"is_default":false},{"name":"Extra mermelada frutos rojos","price":30,"is_default":false},{"name":"Extra tocino","price":50,"is_default":false},{"name":"Extra blueberries","price":35,"is_default":false}]}]},{"item_id":"73a7f502-0e86-5483-8d9f-f3dbd90b4453","title":"Hot Cakes Tradicionales","description":"3 hot cakes esponjosos, con la masa tradicional, con mantequilla y maple","category":"Lo Dulce","price":255,"currency":"MXN","image_urls":["https://tb-static.uber.com/prod/image-proc/processed_images/c2e2850e08bcfaa7fc94130e8a49944c/c67fc65e9b4e16a553eb7574fba090f1.jpeg"],"is_featured":true,"is_popular":false,"is_unavailable":false,"modifier_groups":[]},{"item_id":"609b7ec7-a5c5-5dac-9487-b757f06ba25d","title":"Waffle Belga Delivery","description":"Crujiente por fuera y suave por dentro con crema batida y frutos rojos","category":"Lo Dulce","price":250,"currency":"MXN","image_urls":["https://tb-static.uber.com/prod/image-proc/processed_images/70cacb26d26b1065d9a72323e7e17f44/c67fc65e9b4e16a553eb7574fba090f1.jpeg"],"is_featured":true,"is_popular":false,"is_unavailable":false,"modifier_groups":[{"group_name":"Extras Lo Dulce Delivery","required":false,"min_selection":0,"max_selection":3,"options":[{"name":"Extra maple","price":25,"is_default":false},{"name":"Extra mermelada frutos rojos","price":30,"is_default":false},{"name":"Extra tocino","price":50,"is_default":false},{"name":"Extra blueberries","price":35,"is_default":false}]}]},{"item_id":"e5bfd987-34be-573d-b064-0e7dcf60a36f","title":"Hot Cakes Motin Delivery","description":"3 piezas de hot cakes esponjosos, servidos con una crema de ricotta al limón y compota de blueberries","category":"Lo Dulce","price":240,"currency":"MXN","image_urls":["https://tb-static.uber.com/prod/image-proc/processed_images/a0e01336a0e0af47a4d7fc1951dcb760/c67fc65e9b4e16a553eb7574fba090f1.jpeg"],"is_featured":true,"is_popular":false,"is_unavailable":false,"modifier_groups":[{"group_name":"Extras Lo Dulce Delivery","required":false,"min_selection":0,"max_selection":3,"options":[{"name":"Extra maple","price":25,"is_default":false},{"name":"Extra mermelada frutos rojos","price":30,"is_default":false},{"name":"Extra tocino","price":50,"is_default":false},{"name":"Extra blueberries","price":35,"is_default":false}]}]}]},{"name":"Fruta","items":[{"item_id":"414f59f0-ef49-502d-b5e8-e53219c06285","title":"Fruta De Temporada","description":"Fruta De Temporada","category":"Fruta","price":170,"currency":"MXN","image_urls":["https://tb-static.uber.com/prod/image-proc/processed_images/66497b58a903c90ab396b11ec4b9c77a/5143f1e218c67c20fe5a4cd33d90b07b.jpeg"],"is_featured":true,"is_popular":false,"is_unavailable":false,"modifier_groups":[{"group_name":"Agrega yogurt y granola","required":false,"min_selection":0,"max_selection":2,"options":[{"name":"Granola","price":22.5,"is_default":false},{"name":"Yogurt","price":22.5,"is_default":false}]}]},{"item_id":"8f1ccc3d-9bfe-56b7-8551-16e2f53e8a00","title":"Bowl De Frutos Rojos","description":"Bowl De Frutos Rojos","category":"Fruta","price":185,"currency":"MXN","image_urls":["https://tb-static.uber.com/prod/image-proc/processed_images/0e59b86f0b44a00f572cdfbff71c3c8b/5143f1e218c67c20fe5a4cd33d90b07b.jpeg"],"is_featured":false,"is_popular":false,"is_unavailable":false,"modifier_groups":[{"group_name":"Agrega yogurt y granola","required":false,"min_selection":0,"max_selection":2,"options":[{"name":"Granola","price":22.5,"is_default":false},{"name":"Yogurt","price":22.5,"is_default":false}]}]}]},{"name":"Jugos","items":[{"item_id":"34f6e950-f16c-5e69-81fa-567136bd5e0b","title":"Verde","description":"Torpja, espinaca, apio, nopal, perejil, piña y arándanos","category":"Jugos","price":75,"currency":"MXN","image_urls":["https://tb-static.uber.com/prod/image-proc/processed_images/2820f24ff812594786710b834e514552/5143f1e218c67c20fe5a4cd33d90b07b.jpeg"],"is_featured":true,"is_popular":false,"is_unavailable":false,"modifier_groups":[]},{"item_id":"11a2bf85-16d7-55f6-97bf-53f3e78eb461","title":"Jugo naranja","description":"Jugo naranja","category":"Jugos","price":70,"currency":"MXN","image_urls":["https://tb-static.uber.com/prod/image-proc/processed_images/2820f24ff812594786710b834e514552/5143f1e218c67c20fe5a4cd33d90b07b.jpeg"],"is_featured":false,"is_popular":false,"is_unavailable":false,"modifier_groups":[]},{"item_id":"38ceed49-5bd7-508a-af8c-8be5767ec51d","title":"Detox","description":"Naranja, jengibre, manzana y zanahoria","category":"Jugos","price":75,"currency":"MXN","image_urls":["https://tb-static.uber.com/prod/image-proc/processed_images/2820f24ff812594786710b834e514552/5143f1e218c67c20fe5a4cd33d90b07b.jpeg"],"is_featured":false,"is_popular":false,"is_unavailable":false,"modifier_groups":[]},{"item_id":"c2d33c1d-4c15-56f9-835c-0feec35c8a21","title":"Jugo toronja","description":"Jugo toronja","category":"Jugos","price":70,"currency":"MXN","image_urls":["https://tb-static.uber.com/prod/image-proc/processed_images/2820f24ff812594786710b834e514552/5143f1e218c67c20fe5a4cd33d90b07b.jpeg"],"is_featured":false,"is_popular":false,"is_unavailable":false,"modifier_groups":[]},{"item_id":"8bce1dda-e9ca-5aab-8d5d-ad7ba5bbd937","title":"Boost","description":"Naranja, guayaba, papaya y cúrcuma","category":"Jugos","price":75,"currency":"MXN","image_urls":["https://tb-static.uber.com/prod/image-proc/processed_images/2820f24ff812594786710b834e514552/5143f1e218c67c20fe5a4cd33d90b07b.jpeg"],"is_featured":false,"is_popular":false,"is_unavailable":false,"modifier_groups":[]},{"item_id":"6a8d73b2-c8b7-5797-8d2b-fec113e78a8d","title":"Tropical","description":"Naranja, kiwi, fresa y plátano","category":"Jugos","price":75,"currency":"MXN","image_urls":["https://tb-static.uber.com/prod/image-proc/processed_images/2820f24ff812594786710b834e514552/5143f1e218c67c20fe5a4cd33d90b07b.jpeg"],"is_featured":false,"is_popular":false,"is_unavailable":false,"modifier_groups":[]},{"item_id":"d5f48deb-8039-5d3e-beb2-88eb287e2b53","title":"Rojo Rojo","description":"Naranja, betabel, manzana y fresa","category":"Jugos","price":75,"currency":"MXN","image_urls":["https://tb-static.uber.com/prod/image-proc/processed_images/2820f24ff812594786710b834e514552/5143f1e218c67c20fe5a4cd33d90b07b.jpeg"],"is_featured":false,"is_popular":false,"is_unavailable":false,"modifier_groups":[]}]},{"name":"Smoothies","items":[{"item_id":"653fb37b-dadc-5d0b-a4b4-c8947c5c3414","title":"Avo","description":"Aguacate, pepino, limón, kiwi, perejil, miel de agave y linaza","category":"Smoothies","price":110,"currency":"MXN","image_urls":[],"is_featured":false,"is_popular":false,"is_unavailable":false,"modifier_groups":[{"group_name":"Proteína","required":false,"min_selection":0,"max_selection":1,"options":[{"name":"Agrega proteína","price":35,"is_default":false}]}]}]},{"name":"Bebidas","items":[{"item_id":"f1c7438e-930f-5958-ac84-8dbae24976bc","title":"Te Helado Del Dia","description":"300 ml","category":"Bebidas","price":50,"currency":"MXN","image_urls":[],"is_featured":false,"is_popular":false,"is_unavailable":false,"modifier_groups":[]},{"item_id":"130d5459-9336-5467-921e-058048e48852","title":"Soda Félix Frambuesa","description":"Jugo de fruta natural con agua mineral, sin azúcares añadidos ni endulzantes artificiales o conservadores","category":"Bebidas","price":70,"currency":"MXN","image_urls":["https://tb-static.uber.com/prod/image-proc/processed_images/7b2ca17d5f72ffe4f86c463960dc953d/5143f1e218c67c20fe5a4cd33d90b07b.jpeg"],"is_featured":false,"is_popular":false,"is_unavailable":false,"modifier_groups":[]},{"item_id":"bdc3e2d4-20c2-5852-8969-d4035057225e","title":"Coca Zero","description":"355 ml","category":"Bebidas","price":55,"currency":"MXN","image_urls":[],"is_featured":false,"is_popular":false,"is_unavailable":false,"modifier_groups":[]},{"item_id":"d9efad3c-2139-58b2-aca1-ef9df22f98f1","title":"Soda Félix Manzana","description":"Jugo de fruta natural con agua mineral, sin azúcares añadidos ni endulzantes artificiales o conservadores","category":"Bebidas","price":70,"currency":"MXN","image_urls":["https://tb-static.uber.com/prod/image-proc/processed_images/efb2c03d7b988f5569ef152638cc86d0/5143f1e218c67c20fe5a4cd33d90b07b.jpeg"],"is_featured":false,"is_popular":false,"is_unavailable":false,"modifier_groups":[]},{"item_id":"35ca4dda-cfb1-5664-8fa2-d463aef41169","title":"Coca light","description":"355 ml","category":"Bebidas","price":55,"currency":"MXN","image_urls":[],"is_featured":false,"is_popular":false,"is_unavailable":false,"modifier_groups":[]},{"item_id":"2373b2c0-5d13-57ec-9e01-effe39748051","title":"Soda Félix Guayaba","description":"Jugo de fruta natural con agua mineral, sin azúcares añadidos ni endulzantes artificiales o conservadores","category":"Bebidas","price":70,"currency":"MXN","image_urls":["https://tb-static.uber.com/prod/image-proc/processed_images/f84d81e8d33ecb77f8b74638178fdf80/5143f1e218c67c20fe5a4cd33d90b07b.jpeg"],"is_featured":false,"is_popular":false,"is_unavailable":false,"modifier_groups":[]},{"item_id":"51d00357-512c-4fad-b8b8-3954a01d5bea","title":"Agua Natural Ciel","description":"600 ml","category":"Bebidas","price":55,"currency":"MXN","image_urls":[],"is_featured":false,"is_popular":false,"is_unavailable":false,"modifier_groups":[]},{"item_id":"3676f1a7-e11e-54dc-96f4-3009d18f31b2","title":"Soda Félix Mandarina","description":"Jugo de fruta natural con agua mineral, sin azúcares añadidos ni endulzantes artificiales o conservadores","category":"Bebidas","price":70,"currency":"MXN","image_urls":["https://tb-static.uber.com/prod/image-proc/processed_images/34acc791a99e3ce5af1b744597cbd773/5143f1e218c67c20fe5a4cd33d90b07b.jpeg"],"is_featured":false,"is_popular":false,"is_unavailable":false,"modifier_groups":[]}]}]};
+
+  // ═══════════════════════════════════════════
+  // STATE
+  // ═══════════════════════════════════════════
+  let cart = [];                 // [{item, modifiers:[{groupName,optionName,price}], qty, lineTotal}]
+  let modalItem = null;
+  let modalQty = 1;
+  let modalSelections = {};      // groupName → [{optionName, price}]
+
+  // ═══════════════════════════════════════════
+  // HELPERS
+  // ═══════════════════════════════════════════
+  const fmt = n => `$${Math.round(n)}`;
+  const slug = s => s.toLowerCase().replace(/[^a-z0-9]/g, '-');
+
+  // ═══════════════════════════════════════════
+  // RENDER MENU
+  // ═══════════════════════════════════════════
+  function buildMenu() {
+    const catNav = document.getElementById('catNav');
+    const menuCol = document.getElementById('menuCol');
+    catNav.innerHTML = '';
+    menuCol.innerHTML = '';
+
+    MENU.categories.forEach((cat, ci) => {
+      const id = 'cat-' + slug(cat.name);
+
+      // Category tab
+      const btn = document.createElement('button');
+      btn.className = 'cat-nav-item' + (ci === 0 ? ' active' : '');
+      btn.textContent = cat.name;
+      btn.dataset.catId = id;
+      btn.onclick = () => {
+        document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'start' });
+      };
+      catNav.appendChild(btn);
+
+      // Section
+      const section = document.createElement('div');
+      section.className = 'menu-section';
+      section.id = id;
+
+      const title = document.createElement('h2');
+      title.className = 'menu-section-title';
+      title.textContent = cat.name;
+      section.appendChild(title);
+
+      const grid = document.createElement('div');
+      grid.className = 'menu-grid';
+
+      cat.items.forEach(item => {
+        if (item.is_unavailable) return;
+        grid.appendChild(buildItemCard(item));
+      });
+
+      section.appendChild(grid);
+      menuCol.appendChild(section);
+    });
+
+    // Intersection observer for active category tab
+    setupCatObserver();
+  }
+
+  function buildItemCard(item) {
+    const card = document.createElement('div');
+    card.className = 'item-card';
+    card.onclick = () => openItemModal(item);
+
+    const imgWrap = document.createElement('div');
+    imgWrap.className = 'item-img-wrap';
+
+    if (item.image_urls && item.image_urls.length > 0) {
+      const img = document.createElement('img');
+      img.src = item.image_urls[0];
+      img.alt = item.title;
+      img.loading = 'lazy';
+      img.onerror = () => { img.style.display = 'none'; placeholder.style.display = 'flex'; };
+      const placeholder = document.createElement('div');
+      placeholder.className = 'item-img-placeholder';
+      placeholder.style.display = 'none';
+      placeholder.textContent = item.title;
+      imgWrap.appendChild(img);
+      imgWrap.appendChild(placeholder);
+    } else {
+      const placeholder = document.createElement('div');
+      placeholder.className = 'item-img-placeholder';
+      placeholder.textContent = item.title;
+      imgWrap.appendChild(placeholder);
+    }
+    card.appendChild(imgWrap);
+
+    if (item.is_popular) {
+      const badge = document.createElement('div');
+      badge.className = 'item-popular-badge';
+      badge.textContent = 'Popular';
+      card.appendChild(badge);
+    }
+
+    const body = document.createElement('div');
+    body.className = 'item-body';
+
+    const name = document.createElement('div');
+    name.className = 'item-name';
+    name.textContent = item.title;
+
+    const desc = document.createElement('div');
+    desc.className = 'item-desc';
+    desc.textContent = item.description;
+
+    const footer = document.createElement('div');
+    footer.className = 'item-footer';
+
+    const price = document.createElement('div');
+    price.className = 'item-price';
+    price.textContent = fmt(item.price);
+
+    const addBtn = document.createElement('button');
+    addBtn.className = 'item-add-btn';
+    addBtn.textContent = '+';
+    addBtn.onclick = e => { e.stopPropagation(); openItemModal(item); };
+
+    footer.appendChild(price);
+    footer.appendChild(addBtn);
+    body.appendChild(name);
+    body.appendChild(desc);
+    body.appendChild(footer);
+    card.appendChild(body);
+
+    return card;
+  }
+
+  // ═══════════════════════════════════════════
+  // ITEM MODAL
+  // ═══════════════════════════════════════════
+  function openItemModal(item) {
+    modalItem = item;
+    modalQty = 1;
+    modalSelections = {};
+
+    // Image
+    const imgWrap = document.getElementById('itemModalImgWrap');
+    if (item.image_urls && item.image_urls.length > 0) {
+      imgWrap.innerHTML = `<img class="item-modal-img" src="${item.image_urls[0]}" alt="${item.title}" onerror="this.parentElement.innerHTML='<div class=item-modal-img-placeholder>${item.title}</div>'">`;
+    } else {
+      imgWrap.innerHTML = `<div class="item-modal-img-placeholder">${item.title}</div>`;
+    }
+
+    // Body
+    const body = document.getElementById('itemModalBody');
+    let html = `
+      <h2 class="item-modal-name">${item.title}</h2>
+      <p class="item-modal-desc">${item.description}</p>
+      <p class="item-modal-base-price">${fmt(item.price)}</p>
+    `;
+
+    item.modifier_groups.forEach(mg => {
+      const isRadio = mg.max_selection === 1;
+      const tag = mg.required
+        ? '<span class="mod-group-tag">Requerido</span>'
+        : '<span class="mod-group-tag optional">Opcional</span>';
+      const hint = mg.max_selection > 1
+        ? `<span class="mod-group-hint">Máx ${mg.max_selection}</span>`
+        : '';
+
+      html += `<div class="mod-group" data-group="${mg.group_name}">
+        <div class="mod-group-header">
+          <span class="mod-group-name">${mg.group_name}</span>
+          ${tag}${hint}
+        </div>`;
+
+      mg.options.forEach((opt, oi) => {
+        const inputType = isRadio ? 'radio' : 'checkbox';
+        const name = `mod-${slug(mg.group_name)}`;
+        const id = `${name}-${oi}`;
+        const priceLabel = opt.price > 0 ? `<span class="mod-option-price">+${fmt(opt.price)}</span>` : '';
+
+        html += `<label class="mod-option">
+          <input type="${inputType}" name="${name}" id="${id}"
+            data-group="${mg.group_name}"
+            data-option="${opt.name}"
+            data-price="${opt.price}"
+            data-max="${mg.max_selection}"
+            onchange="handleModChange(this)">
+          <span class="mod-option-label">${opt.name}</span>
+          ${priceLabel}
+        </label>`;
+      });
+
+      html += `</div>`;
+    });
+
+    body.innerHTML = html;
+
+    document.getElementById('modalQtyNum').textContent = '1';
+    updateModalPrice();
+
+    document.getElementById('itemModalBackdrop').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function handleModChange(input) {
+    const group = input.dataset.group;
+    const optName = input.dataset.option;
+    const price = parseFloat(input.dataset.price);
+    const max = parseInt(input.dataset.max);
+
+    if (input.type === 'radio') {
+      modalSelections[group] = [{ name: optName, price }];
+    } else {
+      if (!modalSelections[group]) modalSelections[group] = [];
+      if (input.checked) {
+        // Enforce max
+        const checked = document.querySelectorAll(`input[data-group="${group}"]:checked`);
+        if (checked.length > max) {
+          input.checked = false;
+          return;
+        }
+        modalSelections[group].push({ name: optName, price });
+      } else {
+        modalSelections[group] = modalSelections[group].filter(o => o.name !== optName);
+      }
+    }
+    updateModalPrice();
+  }
+
+  function updateModalPrice() {
+    const base = modalItem.price;
+    let extra = 0;
+    Object.values(modalSelections).forEach(opts => opts.forEach(o => extra += o.price));
+    const total = (base + extra) * modalQty;
+
+    document.getElementById('btnAddPrice').textContent = fmt(total);
+
+    // Check if all required groups are satisfied
+    const allSatisfied = modalItem.modifier_groups
+      .filter(mg => mg.required)
+      .every(mg => {
+        const sel = modalSelections[mg.group_name] || [];
+        return sel.length >= mg.min_selection;
+      });
+
+    document.getElementById('btnAddToCart').disabled = !allSatisfied;
+  }
+
+  function changeModalQty(delta) {
+    modalQty = Math.max(1, modalQty + delta);
+    document.getElementById('modalQtyNum').textContent = modalQty;
+    updateModalPrice();
+  }
+
+  function addToCartFromModal() {
+    const mods = [];
+    Object.entries(modalSelections).forEach(([grp, opts]) => {
+      opts.forEach(o => mods.push({ groupName: grp, optionName: o.name, price: o.price }));
+    });
+
+    const base = modalItem.price;
+    const extra = mods.reduce((s, m) => s + m.price, 0);
+    const lineTotal = (base + extra) * modalQty;
+
+    // Try to merge with existing identical item+modifiers
+    const key = modalItem.item_id + JSON.stringify(mods);
+    const existing = cart.find(c => c.key === key);
+    if (existing) {
+      existing.qty += modalQty;
+      existing.lineTotal = (base + extra) * existing.qty;
+    } else {
+      cart.push({ key, item: modalItem, modifiers: mods, qty: modalQty, unitPrice: base + extra, lineTotal });
+    }
+
+    renderCart();
+    closeItemModalDirect();
+  }
+
+  function closeItemModal(e) {
+    if (e.target === document.getElementById('itemModalBackdrop')) closeItemModalDirect();
+  }
+  function closeItemModalDirect() {
+    document.getElementById('itemModalBackdrop').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  // ═══════════════════════════════════════════
+  // CART
+  // ═══════════════════════════════════════════
+  function renderCart() {
+    const total = cart.reduce((s, c) => s + c.lineTotal, 0);
+    const count = cart.reduce((s, c) => s + c.qty, 0);
+    const empty = cart.length === 0;
+
+    // Desktop
+    document.getElementById('cartEmpty').style.display = empty ? 'flex' : 'none';
+    document.getElementById('cartItemsDesktop').style.display = empty ? 'none' : 'block';
+    document.getElementById('cartFooter').style.display = empty ? 'none' : 'block';
+    document.getElementById('cartBadgeDesktop').textContent = count;
+    document.getElementById('cartTotalDesktop').textContent = fmt(total);
+    document.getElementById('btnOrderDesktop').disabled = empty;
+
+    // Items
+    const itemsHtml = cart.map((c, ci) => {
+      const modsSummary = c.modifiers.map(m => m.optionName).join(', ');
+      return `<div class="cart-item">
+        <div class="cart-item-info">
+          <div class="cart-item-name">${c.item.title}</div>
+          ${modsSummary ? `<div class="cart-item-mods">${modsSummary}</div>` : ''}
+          <div class="cart-qty">
+            <button class="cart-qty-btn" onclick="changeCartQty(${ci}, -1)">−</button>
+            <span class="cart-qty-num">${c.qty}</span>
+            <button class="cart-qty-btn" onclick="changeCartQty(${ci}, 1)">+</button>
+          </div>
+        </div>
+        <div class="cart-item-price">${fmt(c.lineTotal)}</div>
+      </div>`;
+    }).join('');
+
+    document.getElementById('cartItemsDesktop').innerHTML = itemsHtml;
+    document.getElementById('cartItemsMobile').innerHTML = itemsHtml;
+
+    // Mobile
+    document.getElementById('cartTotalMobile').textContent = fmt(total);
+    document.getElementById('btnOrderMobile').disabled = empty;
+
+    const mobileBtn = document.getElementById('mobileCartBtn');
+    if (count > 0) {
+      mobileBtn.style.display = 'block';
+      mobileBtn.innerHTML = `Ver orden (${count}) · ${fmt(total)}`;
+    } else {
+      mobileBtn.style.display = 'none';
+    }
+  }
+
+  function changeCartQty(index, delta) {
+    cart[index].qty = Math.max(0, cart[index].qty + delta);
+    if (cart[index].qty === 0) {
+      cart.splice(index, 1);
+    } else {
+      cart[index].lineTotal = cart[index].unitPrice * cart[index].qty;
+    }
+    renderCart();
+  }
+
+  // ═══════════════════════════════════════════
+  // CART DRAWER (mobile)
+  // ═══════════════════════════════════════════
+  function openCartDrawer() {
+    document.getElementById('cartDrawerBackdrop').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeCartDrawer(e) {
+    if (e.target === document.getElementById('cartDrawerBackdrop')) closeCartDrawerDirect();
+  }
+  function closeCartDrawerDirect() {
+    document.getElementById('cartDrawerBackdrop').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  // ═══════════════════════════════════════════
+  // ORDER
+  // ═══════════════════════════════════════════
+  function placeOrder() {
+    const total = cart.reduce((s, c) => s + c.lineTotal, 0);
+    document.getElementById('confirmTotal').textContent = fmt(total);
+    closeCartDrawerDirect();
+    document.getElementById('confirmModalBackdrop').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeConfirm() {
+    cart = [];
+    renderCart();
+    document.getElementById('confirmModalBackdrop').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  // ═══════════════════════════════════════════
+  // ACTIVE CATEGORY OBSERVER
+  // ═══════════════════════════════════════════
+  function setupCatObserver() {
+    const sections = document.querySelectorAll('.menu-section');
+    const tabs = document.querySelectorAll('.cat-nav-item');
+
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const id = entry.target.id;
+          tabs.forEach(t => {
+            t.classList.toggle('active', t.dataset.catId === id);
+          });
+          // Scroll active tab into view
+          const activeTab = document.querySelector(`.cat-nav-item[data-cat-id="${id}"]`);
+          if (activeTab) activeTab.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        }
+      });
+    }, { rootMargin: '-72px 0px -60% 0px', threshold: 0 });
+
+    sections.forEach(s => observer.observe(s));
+  }
+
+  // ═══════════════════════════════════════════
+  // INIT
+  // ═══════════════════════════════════════════
+  buildMenu();
+  renderCart();
+  </script>
+
+</body>
+</html>
