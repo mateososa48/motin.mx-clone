@@ -51,7 +51,7 @@ export const getLegacyPageFragment = cache((page: LegacyContentPageKey) => {
 export const getSocialSprite = cache(() => {
   const html = readLegacyHtml("index.html");
   const spriteMatch = html.match(
-    /<svg[\s\S]*?data-usage="social-icons-svg"[\s\S]*?<\/svg>/i,
+    /<svg[^>]*data-usage="social-icons-svg"[^>]*>[\s\S]*?<\/svg>/i,
   );
 
   if (!spriteMatch) {
