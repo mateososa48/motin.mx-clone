@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="hamburger-icon--even" viewBox="0 0 24 18">
+    <path d="M2 2h20M2 9h20M2 16h20" fill="none" stroke="currentColor" stroke-linecap="round" />
+  </symbol>
+  <symbol id="hamburger-icon--odd" viewBox="0 0 24 18">
+    <path d="M2 2h20M2 9h20M2 16h20" fill="none" stroke="currentColor" stroke-linecap="round" />
+  </symbol>
+  <symbol id="hotdog-icon--even" viewBox="0 0 24 14">
+    <path d="M2 2h20M2 7h20M2 12h20" fill="none" stroke="currentColor" stroke-linecap="round" />
+  </symbol>
+  <symbol id="hotdog-icon--odd" viewBox="0 0 24 14">
+    <path d="M2 2h20M2 7h20M2 12h20" fill="none" stroke="currentColor" stroke-linecap="round" />
+  </symbol>
+  <symbol id="plus-icon--even" viewBox="0 0 20 20">
+    <path d="M10 2v16M2 10h16" fill="none" stroke="currentColor" stroke-linecap="round" />
+  </symbol>
+  <symbol id="plus-icon--odd" viewBox="0 0 20 20">
+    <path d="M10 2v16M2 10h16" fill="none" stroke="currentColor" stroke-linecap="round" />
+  </symbol>
+  <symbol id="dots-horizontal-icon--even" viewBox="0 0 25 7">
+    <circle cx="4" cy="3.5" r="1.5" fill="currentColor" />
+    <circle cx="12.5" cy="3.5" r="1.5" fill="currentColor" />
+    <circle cx="21" cy="3.5" r="1.5" fill="currentColor" />
+  </symbol>
+  <symbol id="dots-horizontal-icon--odd" viewBox="0 0 25 7">
+    <circle cx="4" cy="3.5" r="1.5" fill="currentColor" />
+    <circle cx="12.5" cy="3.5" r="1.5" fill="currentColor" />
+    <circle cx="21" cy="3.5" r="1.5" fill="currentColor" />
+  </symbol>
+  <symbol id="dots-vertical-icon--even" viewBox="0 0 7 25">
+    <circle cx="3.5" cy="4" r="1.5" fill="currentColor" />
+    <circle cx="3.5" cy="12.5" r="1.5" fill="currentColor" />
+    <circle cx="3.5" cy="21" r="1.5" fill="currentColor" />
+  </symbol>
+  <symbol id="dots-vertical-icon--odd" viewBox="0 0 7 25">
+    <circle cx="3.5" cy="4" r="1.5" fill="currentColor" />
+    <circle cx="3.5" cy="12.5" r="1.5" fill="currentColor" />
+    <circle cx="3.5" cy="21" r="1.5" fill="currentColor" />
+  </symbol>
+  <symbol id="squares-horizontal-icon--even" viewBox="0 0 25 7">
+    <rect x="1.5" y="1.5" width="4" height="4" fill="none" stroke="currentColor" />
+    <rect x="10.5" y="1.5" width="4" height="4" fill="none" stroke="currentColor" />
+    <rect x="19.5" y="1.5" width="4" height="4" fill="none" stroke="currentColor" />
+  </symbol>
+  <symbol id="squares-horizontal-icon--odd" viewBox="0 0 25 7">
+    <rect x="1.5" y="1.5" width="4" height="4" fill="none" stroke="currentColor" />
+    <rect x="10.5" y="1.5" width="4" height="4" fill="none" stroke="currentColor" />
+    <rect x="19.5" y="1.5" width="4" height="4" fill="none" stroke="currentColor" />
+  </symbol>
+  <symbol id="squares-vertical-icon--even" viewBox="0 0 7 25">
+    <rect x="1.5" y="1.5" width="4" height="4" fill="none" stroke="currentColor" />
+    <rect x="1.5" y="10.5" width="4" height="4" fill="none" stroke="currentColor" />
+    <rect x="1.5" y="19.5" width="4" height="4" fill="none" stroke="currentColor" />
+  </symbol>
+  <symbol id="squares-vertical-icon--odd" viewBox="0 0 7 25">
+    <rect x="1.5" y="1.5" width="4" height="4" fill="none" stroke="currentColor" />
+    <rect x="1.5" y="10.5" width="4" height="4" fill="none" stroke="currentColor" />
+    <rect x="1.5" y="19.5" width="4" height="4" fill="none" stroke="currentColor" />
+  </symbol>
+  <symbol id="close-icon" viewBox="0 0 16 16">
+    <path d="M3 3l10 10M13 3L3 13" fill="none" stroke="currentColor" stroke-linecap="round" />
+  </symbol>
+</svg>
