@@ -51,31 +51,16 @@ div {
   display: none !important;
 }
 
-.Mobile-overlay {
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-  transition: opacity 0.2s ease, visibility 0.2s ease;
-}
-
 body[data-mobile-nav-open="true"] {
   overflow: hidden;
 }
 
 body[data-mobile-nav-open="true"] .Mobile-overlay {
-  opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
-}
-
-body[data-mobile-nav-open="true"] .Mobile-overlay-back,
-body[data-mobile-nav-open="true"] .Mobile-overlay-close,
-body[data-mobile-nav-open="true"] .Mobile-overlay-nav-item {
-  pointer-events: auto;
+  left: 0 !important;
 }
 
 body[data-mobile-nav-open="true"] .Mobile-overlay-menu {
-  transform: translateX(0);
+  transform: translateX(0) !important;
 }
 
 .LegacyPageShell {
