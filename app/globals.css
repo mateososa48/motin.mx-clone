@@ -57,10 +57,13 @@ body[data-mobile-nav-open="true"] {
 
 body[data-mobile-nav-open="true"] .Mobile-overlay {
   left: 0 !important;
+  background-color: #fff !important;
+  transition: none !important;
 }
 
 body[data-mobile-nav-open="true"] .Mobile-overlay-menu {
   transform: translateX(0) !important;
+  transition: none !important;
 }
 
 .LegacyPageShell {
